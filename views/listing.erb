@@ -1,0 +1,11 @@
+<h2><%= @location.capitalize %></h2>
+<% unless @events.nil? %>
+  <% @events.each do |listing| %>
+    <li>
+      <h2><%= listing.name %></h2>
+      <p>
+        <%= listing.description %>
+      </p>
+    </li>
+  <% end %>
+<% end %>

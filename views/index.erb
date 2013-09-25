@@ -1,1 +1,12 @@
-<p>This is a directory of all the places that you can get free food</p>
+<p>
+  There is a time for everything. There is a time for being loud, and there is a time for being quiet. There is a time for being active, and there is a time for being relaxed. There is a time for splurging, and there is a time for being frugal.
+</p>
+<p>
+  There are events with free food all around us. Some places offer great tasting food, others options are simply filling. Whatever it may be, this is a repository for it.
+</p>
+<h2>Find your local listing</h2>
+<% @locations.each do |page| %>
+<ul>
+  <li><a href="/<%= page.name.gsub(/\s+/, "").downcase! %>"><%= page.name %></a></li>
+</ul>
+<% end %>
