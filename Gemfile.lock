@@ -74,7 +74,7 @@ DEPENDENCIES
   rake
   rspec
   shotgun
-  sinatra
+  sinatra (~> 1.4.3)
   sinatra-activerecord
   sqlite3
   tux
