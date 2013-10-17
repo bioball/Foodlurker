@@ -2,10 +2,16 @@
 <html>
 	<head>
     <title>Foodlurker</title>
+    <link href="<%= url("/assets/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
+    <link href="<%= url("/assets/css/bootstrap-datetimepicker.min.css") %>" rel="stylesheet" type="text/css" />
+    <%= erb :_html5shim %>
   </head>
   <body>
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/js/bootstrap-datetimepicker.min.js"></script>
     <header>
-      <h1>Foodlurker: unapolagetically listing free food events </h1>
+      <h1>Foodlurker: listing of events with free food</h1>
     </header>
     <%= yield %>
   </body>

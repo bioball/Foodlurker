@@ -1,0 +1,24 @@
+<h2><%= @location.name %></h2>
+<form action="/<%= @location.id %>/new" method = "post">
+  <p>
+    <label for "event_name">Name:</label><br>
+    <input id="event_name" name="event[name]" type="text" value="<%= @event.name %>" /><br>
+    <div class="input-append date" id="starttime" data-date="<%= 
+    @today.to_s %>">
+      <input size="16" type="text" name="event[starttime]" value="<%= Time.now.strftime("%B %d %Y - %I:%M %p") %>" />
+      <span class="add-on"><i class="icon-th"></i></span>
+    </div>
+
+    <label for ="event_description">Description:</label><br>
+    <textarea id="event_description" name="event[description]"><%= @event.description %></textarea>
+    <br>
+    <input type="submit" value="Submit event" />
+  </p>
+  <script>
+    $(function(){
+      $('#starttime').datetimepicker({format: 'MM dd yyyy - HH:ii P',
+                                      showMeridian: true,
+                                      autoclose: true});
+    });
+  </script>
+</form>

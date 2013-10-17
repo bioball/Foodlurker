@@ -5,8 +5,8 @@
   There are events with free food all around us. Some places offer great tasting food, others options are simply filling. Whatever it may be, this is a repository for it.
 </p>
 <h2>Find your local listing</h2>
-<% @locations.each do |page| %>
 <ul>
-  <li><a href="/<%= page.name.gsub(/\s+/, "").downcase! %>"><%= page.name %></a></li>
+  <% @locations.each do |page| %>
+    <li><a href="/<%= page.id %>"><%= page.name %></a></li>
+  <% end %>
 </ul>
-<% end %>
