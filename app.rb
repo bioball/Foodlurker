@@ -1,59 +1,79 @@
 require 'rubygems'
+require 'compass'
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'time'
+require 'geocoder'
+require 'sinatra/flash'
 
-set :database, "sqlite3:///foodlurker.db"
+class Foodlurker < Sinatra::Application
+  set :scss, {style: :compact, debug_info: :false}
+  set :database, "sqlite3:///foodlurker.db"
+  enable :sessions
 
-class Location < ActiveRecord::Base
-  has_many :events
+  configure do
+    Compass.add_project_configuration(File.join(Sinatra::Application.root, 
+      'config', 'compass.rb'))
+  end
+
+  configure :production do
+    set :clean_trace, true
+  end
+
+  helpers do
+    include Rack::Utils
+    alias_method :h, :escape_html
+  end
 end
 
-class Event < ActiveRecord::Base
-  belongs_to :location
-end
+#initiate models
+require_relative 'models/init'
 
-use Rack::MethodOverride
+get "/stylesheets/:name.css" do
+  content_type 'text/css', charset: 'utf-8'
+  scss(:"stylesheets/sass/#{params[:name]}")
+end
 
 get "/" do
-  @locations = Location.all
-  erb :index
+  erb :main
 end
 
-get "/:location" do
-  @location = Location.find(params[:location])
-  @events = @location.events
-  erb :listing
-end
-
-get "/:location/new" do
-  @location = Location.find(params[:location])
-  @event = @location.events.new
+get "/events/new" do
+  @event = Event.new
   @today = Time.now
-  erb :newevent
+  erb :"events/new"
 end
 
-post "/:location/new" do
-  @location = Location.find(params[:location])
-  params[:event][:starttime] = dateparser(params[:event][:starttime])
-  @event = @location.events.new(params[:event])
-  if @event.save
-    redirect "/#{@event.location.id}"
+post "/events/new" do
+  if Geocoder.search(params[:event][:address]) == []
+    flash[:warning] = "Address not recognized"
+    erb :"events/new"
   else
-    erb :newevent
+    params[:event][:starttime] = Time.parse(params[:event][:starttime])
+    params[:event][:endtime] = Time.parse(params[:event][:endtime])
+    params[:event][:latitude] = Geocoder.search(params[:event][:address])[0].geometry["location"]["lat"]
+    params[:event][:longitude] = Geocoder.search(params[:event][:address])[0].geometry["location"]["lng"]
+    params[:event][:address] = Geocoder.search(params[:event][:address])[0].formatted_address
+    @event = Event.new(params[:event])
+    if @event.save
+      @flash.now[:success] = "Event created!"
+      redirect "/events/#{@event.id}"
+    end
   end
 end
 
-delete "/:location/:event" do
-  @event = Event.find(params[:event])
+get "/events/all" do
+  @events = Event.all
+  erb :"events/index"
+end
+
+get "/events/:id" do
+  @event = Event.find(params[:id])
+  erb :"events/listing"
+end
+
+delete "/events/:id" do
+  @event = Event.find(params[:id])
   @event.destroy
-  redirect "/#{@event.location.id}"
-end
-
-helpers do
-
-  def dateparser(date)
-    Time.parse(date)
-  end
-
+  redirect "/"
 end

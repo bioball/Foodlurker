@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html>
 	<head>
+    <meta charset="utf-8">
     <title>Foodlurker</title>
-    <link href="<%= url("/assets/css/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
-    <link href="<%= url("/assets/css/bootstrap-datetimepicker.min.css") %>" rel="stylesheet" type="text/css" />
-    <%= erb :_html5shim %>
+    <link href="<%= url("/stylesheets/bootstrap.min.css") %>" rel="stylesheet" type="text/css" />
+    <link href="<%= url("/stylesheets/bootstrap-datetimepicker.min.css") %>" rel="stylesheet" type="text/css" />
+    <link href="<%= url("/stylesheets/main.css") %>", rel="stylesheet", type="text/css" />
+    <%= erb :"partials/_html5shim" %>
   </head>
   <body>
-    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <header>
-      <h1>Foodlurker: listing of events with free food</h1>
+    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap-datetimepicker.min.js"></script>
+    <header>  
+      <% unless flash.nil? %>
+        <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key %>">
+            <%= value %> 
+          </div>
+        <% end %>
+      <% end %>
+      <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+        <a href="/" class="navbar-brand">Foodlurker</a>
+        <div class = "collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/events/new">Submit event</a></li>
+            <li><a href="#">About</a></li>
+          </ul>
+        </div>
+      </nav>
     </header>
-    <%= yield %>
+    <div id="background">
+      <div id="content">
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>
